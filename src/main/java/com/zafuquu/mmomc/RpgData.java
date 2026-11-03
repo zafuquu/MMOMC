@@ -70,7 +70,7 @@ public final class RpgData {
         if (!tag.contains("stat_int")) tag.putInt("stat_int", 15);
         if (!tag.contains("stat_points")) tag.putInt("stat_points", 0);
         if (!tag.contains("experience")) tag.putLong("experience", 0L);
-        if (!tag.contains("mana")) tag.putInt("mana", maxMana(player));
+        if (!tag.contains("mana")) tag.putInt("mana", 50 + Math.max(0, tag.getInt("stat_int") - 15) * 3);
         if (!tag.contains("job")) tag.putString("job", "beginner");
         if (!tag.contains("specialization")) tag.putString("specialization", "");
         return tag;
