@@ -20,7 +20,8 @@
 - [ ] Balance pass in actual gameplay
 
 ## Milestone 2 — Equipment and refinement
-- [ ] RPG equipment slots and rarity tiers
+- [x] Pure equipment slot, rarity, level requirement, stat aggregation, and bonus model with unit tests
+- [ ] In-game RPG equipment slots and rarity tiers
 - [ ] Accessory stats and buffs
 - [x] Pure, unit-tested refinement chance, pity, stat bonus, and aura milestone rules
 - [ ] Refinement +1 to +20
