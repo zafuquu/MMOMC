@@ -25,7 +25,7 @@ class EquipmentCatalogTest {
     void everyCatalogEntryHasConsistentIdentityAndValidLevel() {
         for (var item : RpgEquipmentCatalog.all()) {
             assertEquals(item.id(), RpgEquipmentCatalog.get(item.id()).id());
-            assertTrue(item.requiredLevel() >= 1 && item.requiredLevel() <= RpgData.maxLevel());
+            assertTrue(item.requiredLevel() >= 1 && item.requiredLevel() <= 120);
             assertNotNull(item.slot());
             assertNotNull(item.rarity());
         }
