@@ -112,3 +112,8 @@ idea {
         downloadJavadoc = true
     }
 }
+
+// Keep pure Java rules covered by automated unit tests.
+tasks.named('test') {
+    useJUnitPlatform()
+}
