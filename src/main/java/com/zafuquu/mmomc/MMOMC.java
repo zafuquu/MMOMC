@@ -18,6 +18,7 @@ public final class MMOMC {
         NeoForge.EVENT_BUS.addListener(RpgEvents::onLivingDeath);
         NeoForge.EVENT_BUS.addListener(RpgEvents::onPlayerClone);
         NeoForge.EVENT_BUS.addListener(RpgCommands::onRegisterCommands);
+        NeoForge.EVENT_BUS.addListener(RpgCombat::onPlayerTick);
 
         LOGGER.info("MMOMC initialized: RPG core event handlers registered.");
     }
