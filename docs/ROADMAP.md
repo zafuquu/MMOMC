@@ -37,7 +37,7 @@
 
 ## Milestone 4 — Multiplayer social systems
 - [x] Party creation, leader invitations, join, leave, and member list
-- [x] Party EXP sharing for nearby online members
+- [x] Party EXP sharing for nearby online members (exact remainder distribution; no EXP inflation)
 - [x] Party-targeted healing and support buffs
 - [ ] Persistent offline party roster and leader succession
 - [ ] Party chat, roles, and configurable party size

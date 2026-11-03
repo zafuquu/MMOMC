@@ -113,8 +113,11 @@ public final class RpgParty {
                 .filter(member -> killer.distanceToSqr(member) <= 1024.0)
                 .toList();
         if (eligible.isEmpty()) eligible = java.util.List.of(killer);
-        long share = Math.max(1L, totalReward / eligible.size());
-        for (ServerPlayer member : eligible) {
+        long[] shares = RpgPartyRewards.split(Math.max(0L, totalReward), eligible.size());
+        for (int i = 0; i < eligible.size(); i++) {
+            ServerPlayer member = eligible.get(i);
+            long share = shares[i];
+            if (share == 0) continue;
             boolean leveled = RpgData.addExperience(member, share);
             String message = "+" + share + " EXP (party share)";
             if (leveled) message += " — Level up! You are now level " + RpgData.level(member) + ".";
