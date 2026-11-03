@@ -73,9 +73,15 @@ public final class RpgSkills {
 
     private static int heal(ServerPlayer player) {
         if (!ready(player, "heal", 18, 160)) return 0;
-        double missing = player.getMaxHealth() - player.getHealth();
-        if (missing <= 0.01) {
-            player.sendSystemMessage(Component.literal("§eYou are already at full health."));
+        ServerPlayer target = player.server.getPlayerList().getPlayers().stream()
+                .filter(candidate -> RpgParty.canSupport(player, candidate))
+                .filter(candidate -> candidate.getHealth() < candidate.getMaxHealth() - 0.01f)
+                .filter(candidate -> player.distanceToSqr(candidate) <= 64.0)
+                .filter(player::hasLineOfSight)
+                .min(Comparator.comparingDouble(player::distanceToSqr))
+                .orElse(null);
+        if (target == null) {
+            player.sendSystemMessage(Component.literal("§eNo injured party member within 8 blocks."));
             return 0;
         }
         boolean assist = RpgData.job(player).equals("assist")
@@ -83,9 +89,12 @@ public final class RpgSkills {
                 || RpgData.specialization(player).equals("billposter");
         float amount = (float) (assist ? 10 + Math.max(0, RpgData.stat(player, RpgData.Stat.INT) - 15) * 0.4
                 : 6 + Math.max(0, RpgData.stat(player, RpgData.Stat.INT) - 15) * 0.2);
-        player.heal(amount);
+        float missing = target.getMaxHealth() - target.getHealth();
+        target.heal(amount);
         spend(player, "heal", 18, 160);
-        player.sendSystemMessage(Component.literal("§aHeal restored §f" + Math.min(amount, missing) + "§a health."));
+        player.sendSystemMessage(Component.literal("§aHeal restored §f" + Math.min(amount, missing)
+                + "§a health to " + target.getGameProfile().getName() + "."));
+        if (target != player) target.sendSystemMessage(Component.literal("§a" + player.getGameProfile().getName() + " healed you."));
         return 1;
     }
 
@@ -98,6 +107,19 @@ public final class RpgSkills {
             return 0;
         }
         if (!ready(player, skill, cost, cooldownTicks)) return 0;
+        if (skill.equals("blessing")) {
+            int affected = 0;
+            for (ServerPlayer ally : player.server.getPlayerList().getPlayers()) {
+                if (RpgParty.canSupport(player, ally) && player.distanceToSqr(ally) <= 256.0) {
+                    ally.addEffect(new MobEffectInstance(effect, 20 * 15, amplifier));
+                    affected++;
+                }
+            }
+            if (affected == 0) return 0;
+            spend(player, skill, cost, cooldownTicks);
+            player.sendSystemMessage(Component.literal("§dBlessing applied to " + affected + " party member(s) for 15 seconds."));
+            return 1;
+        }
         player.addEffect(new MobEffectInstance(effect, 20 * 15, amplifier));
         spend(player, skill, cost, cooldownTicks);
         player.sendSystemMessage(Component.literal("§d" + displayName + " activated for 15 seconds."));

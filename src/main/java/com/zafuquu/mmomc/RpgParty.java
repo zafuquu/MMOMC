@@ -20,6 +20,12 @@ public final class RpgParty {
     private static String leader(ServerPlayer p) { return p.getPersistentData().getString(LEADER); }
     private static boolean joined(ServerPlayer p) { return !id(p).isBlank(); }
 
+    public static boolean canSupport(ServerPlayer source, ServerPlayer target) {
+        if (source == target) return true;
+        String sourceParty = id(source);
+        return !sourceParty.isBlank() && sourceParty.equals(id(target));
+    }
+
     public static int create(ServerPlayer p) {
         if (joined(p)) { p.sendSystemMessage(Component.literal("§cLeave your current party first.")); return 0; }
         p.getPersistentData().putString(ID, UUID.randomUUID().toString());
