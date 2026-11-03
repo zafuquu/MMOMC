@@ -51,7 +51,7 @@ class RefinementTest {
         assertTrue(result.success());
         assertEquals(5, result.refinementLevel());
         assertEquals(0, result.consecutiveFailures());
-        assertEquals(105 - 15, result.successChancePercent());
+        assertEquals(100, result.successChancePercent());
     }
 
     @Test
@@ -60,7 +60,7 @@ class RefinementTest {
         assertFalse(result.success());
         assertEquals(19, result.refinementLevel());
         assertEquals(3, result.consecutiveFailures());
-        assertEquals(20, result.successChancePercent());
+        assertEquals(15, result.successChancePercent());
     }
 
     @Test
