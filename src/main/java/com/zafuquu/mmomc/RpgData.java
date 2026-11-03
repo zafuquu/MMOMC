@@ -1,6 +1,7 @@
 package com.zafuquu.mmomc;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerPlayer;
 
 /**
@@ -41,7 +42,7 @@ public final class RpgData {
 
     public static CompoundTag data(ServerPlayer player) {
         CompoundTag persistent = player.getPersistentData();
-        if (!persistent.contains(ROOT, CompoundTag.TAG_COMPOUND)) {
+        if (!persistent.contains(ROOT, Tag.TAG_COMPOUND)) {
             persistent.put(ROOT, new CompoundTag());
         }
         return persistent.getCompound(ROOT);
