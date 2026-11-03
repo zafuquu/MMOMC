@@ -34,6 +34,16 @@ public final class RpgSkills {
             case "hawkeye" -> classBuff(player, skill, "archer", 16, 240, MobEffects.MOVEMENT_SPEED, 1, "Hawkeye");
             case "elemental_surge" -> classBuff(player, skill, "magician", 24, 240, MobEffects.DAMAGE_BOOST, 1, "Elemental Surge");
             case "blessing" -> classBuff(player, skill, "assist", 22, 300, MobEffects.REGENERATION, 1, "Blessing");
+            case "blade_dance" -> specializationAttack(player, skill, "blade_master", 24, 160, 5.0, 0.85, "Blade Dance");
+            case "berserker_rage" -> specializationBuff(player, skill, "berserker", 22, 300, MobEffects.DAMAGE_BOOST, 1, "Berserker Rage");
+            case "paladin_aegis" -> specializationBuff(player, skill, "paladin", 20, 300, MobEffects.DAMAGE_RESISTANCE, 1, "Paladin Aegis");
+            case "guardian_fortress" -> specializationBuff(player, skill, "guardian", 24, 360, MobEffects.DAMAGE_RESISTANCE, 2, "Guardian Fortress");
+            case "ranger_volley" -> specializationAttack(player, skill, "ranger", 20, 120, 12.0, 0.65, "Ranger Volley");
+            case "sharpshooter_focus" -> specializationBuff(player, skill, "sharpshooter", 20, 300, MobEffects.MOVEMENT_SPEED, 1, "Sharpshooter Focus");
+            case "elementor_meteor" -> specializationAttack(player, skill, "elementor", 30, 240, 16.0, 1.0, "Elementor Meteor");
+            case "psykeeper_blast" -> specializationAttack(player, skill, "psykeeper", 28, 200, 14.0, 0.95, "Psykeeper Blast");
+            case "ringmaster_sanctuary" -> specializationPartyHeal(player, skill);
+            case "billposter_combo" -> specializationAttack(player, skill, "billposter", 22, 120, 4.0, 0.9, "Billposter Combo");
             default -> {
                 player.sendSystemMessage(Component.literal("§cUnknown skill. Use /mmomc skill list."));
                 yield 0;
@@ -98,6 +108,65 @@ public final class RpgSkills {
         return 1;
     }
 
+
+
+    private static int specializationAttack(ServerPlayer player, String skill, String requiredSpec,
+            int cost, int cooldownTicks, double range, double multiplier, String displayName) {
+        if (!RpgData.specialization(player).equals(requiredSpec)) {
+            player.sendSystemMessage(Component.literal("§cThis skill requires the " + RpgData.titleCase(requiredSpec) + " specialization."));
+            return 0;
+        }
+        if (!ready(player, skill, cost, cooldownTicks)) return 0;
+        LivingEntity target = nearestTarget(player, range);
+        if (target == null) {
+            player.sendSystemMessage(Component.literal("§cNo hostile target within " + (int) range + " blocks."));
+            return 0;
+        }
+        double primary = requiredSpec.equals("elementor") || requiredSpec.equals("psykeeper")
+                ? RpgData.stat(player, RpgData.Stat.INT) : RpgData.stat(player, RpgData.Stat.STR);
+        float damage = (float) (6.0 + Math.max(0, primary - 15) * multiplier);
+        target.hurt(player.damageSources().playerAttack(player), damage);
+        spend(player, skill, cost, cooldownTicks);
+        player.sendSystemMessage(Component.literal("§d" + displayName + "! §f" + damage + " damage."));
+        return 1;
+    }
+
+    private static int specializationBuff(ServerPlayer player, String skill, String requiredSpec,
+            int cost, int cooldownTicks, net.minecraft.core.Holder<net.minecraft.world.effect.MobEffect> effect,
+            int amplifier, String displayName) {
+        if (!RpgData.specialization(player).equals(requiredSpec)) {
+            player.sendSystemMessage(Component.literal("§cThis skill requires the " + RpgData.titleCase(requiredSpec) + " specialization."));
+            return 0;
+        }
+        if (!ready(player, skill, cost, cooldownTicks)) return 0;
+        player.addEffect(new MobEffectInstance(effect, 20 * 20, amplifier));
+        spend(player, skill, cost, cooldownTicks);
+        player.sendSystemMessage(Component.literal("§d" + displayName + " activated for 20 seconds."));
+        return 1;
+    }
+
+    private static int specializationPartyHeal(ServerPlayer player, String skill) {
+        if (!RpgData.specialization(player).equals("ringmaster")) {
+            player.sendSystemMessage(Component.literal("§cThis skill requires the Ringmaster specialization."));
+            return 0;
+        }
+        if (!ready(player, skill, 30, 300)) return 0;
+        int healed = 0;
+        for (ServerPlayer ally : player.server.getPlayerList().getPlayers()) {
+            if (!RpgParty.canSupport(player, ally) || player.distanceToSqr(ally) > 256.0) continue;
+            if (ally.getHealth() >= ally.getMaxHealth() - 0.01f) continue;
+            ally.heal(12.0f + Math.max(0, RpgData.stat(player, RpgData.Stat.INT) - 15) * 0.4f);
+            healed++;
+            if (ally != player) ally.sendSystemMessage(Component.literal("§aRingmaster Sanctuary restored your health."));
+        }
+        if (healed == 0) {
+            player.sendSystemMessage(Component.literal("§eNo injured party members within 16 blocks."));
+            return 0;
+        }
+        spend(player, skill, 30, 300);
+        player.sendSystemMessage(Component.literal("§aSanctuary healed " + healed + " party member(s)."));
+        return 1;
+    }
 
     private static int classBuff(ServerPlayer player, String skill, String requiredJob,
             int cost, int cooldownTicks, net.minecraft.core.Holder<net.minecraft.world.effect.MobEffect> effect,
