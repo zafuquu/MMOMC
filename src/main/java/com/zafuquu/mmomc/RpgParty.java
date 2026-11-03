@@ -77,9 +77,20 @@ public final class RpgParty {
     public static int leave(ServerPlayer p) {
         if (!joined(p)) { p.sendSystemMessage(Component.literal("§cYou are not in a party.")); return 0; }
         String oldId = id(p);
+        boolean wasLeader = p.getUUID().toString().equals(leader(p));
         p.getPersistentData().remove(ID);
         p.getPersistentData().remove(LEADER);
-        broadcast(p.server, oldId, "§e" + p.getGameProfile().getName() + " left the party.");
+        java.util.List<ServerPlayer> remaining = p.server.getPlayerList().getPlayers().stream()
+                .filter(member -> id(member).equals(oldId))
+                .toList();
+        if (wasLeader && !remaining.isEmpty()) {
+            String nextLeader = remaining.get(0).getUUID().toString();
+            for (ServerPlayer member : remaining) member.getPersistentData().putString(LEADER, nextLeader);
+            broadcast(p.server, oldId, "§e" + p.getGameProfile().getName() + " left. "
+                    + remaining.get(0).getGameProfile().getName() + " is the new party leader.");
+        } else {
+            broadcast(p.server, oldId, "§e" + p.getGameProfile().getName() + " left the party.");
+        }
         p.sendSystemMessage(Component.literal("§eYou left the party."));
         return 1;
     }
