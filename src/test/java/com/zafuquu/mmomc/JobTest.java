@@ -29,6 +29,20 @@ class JobTest {
     }
 
     @Test
+    void everySpecializationMapsToExactlyItsIntendedFirstJob() {
+        assertTrue(Job.specializationBelongsTo("swordsman", "blade_master"));
+        assertTrue(Job.specializationBelongsTo("swordsman", "berserker"));
+        assertTrue(Job.specializationBelongsTo("tank", "paladin"));
+        assertTrue(Job.specializationBelongsTo("tank", "guardian"));
+        assertTrue(Job.specializationBelongsTo("archer", "ranger"));
+        assertTrue(Job.specializationBelongsTo("archer", "sharpshooter"));
+        assertTrue(Job.specializationBelongsTo("magician", "elementor"));
+        assertTrue(Job.specializationBelongsTo("magician", "psykeeper"));
+        assertTrue(Job.specializationBelongsTo("assist", "ringmaster"));
+        assertTrue(Job.specializationBelongsTo("assist", "billposter"));
+    }
+
+    @Test
     void jobIdsAreCaseInsensitive() {
         assertTrue(Job.isFirstJob("SWORDSMAN"));
         assertTrue(Job.specializationBelongsTo("Magician", "Elementor"));

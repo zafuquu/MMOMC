@@ -19,7 +19,8 @@ public final class RpgSkills {
         player.sendSystemMessage(Component.literal("§aHeal §7- 18 mana, 8s cooldown, restores health; Assist gets stronger healing."));
         player.sendSystemMessage(Component.literal("§bArcane Bolt §7- 15 mana, 3s cooldown, INT-scaled magic damage."));
         player.sendSystemMessage(Component.literal("§dClass skills: blade_fury, iron_guard, hawkeye, elemental_surge, blessing."));
-        player.sendSystemMessage(Component.literal("§7Use /mmomc skill cast <skill_id>. Class skills require the matching first job."));
+        player.sendSystemMessage(Component.literal("§dSpecializations: blade_dance, berserker_rage, paladin_aegis, guardian_fortress, ranger_volley, sharpshooter_focus, elementor_meteor, psykeeper_blast, ringmaster_sanctuary, billposter_combo."));
+        player.sendSystemMessage(Component.literal("§7Use /mmomc skill cast <skill_id>. Skills require the matching job or specialization."));
         return 1;
     }
 
