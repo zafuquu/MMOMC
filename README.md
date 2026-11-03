@@ -48,7 +48,7 @@ The first Gradle run downloads Minecraft and NeoForge development dependencies. 
 ### Skills
 - `/mmomc skill list` — list available skills.
 - `/mmomc skill cast <skill_id>` — cast a skill.
-- Skill IDs: `power_strike`, `heal`, `arcane_bolt`, `blade_fury`, `iron_guard`, `hawkeye`, `elemental_surge`, `blessing`.
+- Skill IDs: `power_strike`, `heal`, `arcane_bolt`, `blade_fury`, `iron_guard`, `hawkeye`, `elemental_surge`, `blessing`, `blade_dance`, `berserker_rage`, `paladin_aegis`, `guardian_fortress`, `ranger_volley`, `sharpshooter_focus`, `elementor_meteor`, `psykeeper_blast`, `ringmaster_sanctuary`, `billposter_combo`.
 - First-job abilities require the matching first job. Skill mana costs and cooldowns are validated by the server.
 
 ### Parties
@@ -58,7 +58,7 @@ The first Gradle run downloads Minecraft and NeoForge development dependencies. 
 - `/mmomc party leave` — leave the current party.
 - `/mmomc party list` — list online party members.
 
-Party membership is stored in player persistent data. Invitations expire after five minutes. EXP is shared among nearby online party members; Heal and Blessing only affect party members in range.
+Party membership is stored in player persistent data. Invitations expire after five minutes. If the leader leaves while members are online, leadership transfers to the next online member. EXP is shared among nearby online party members; Heal and Blessing only affect party members in range.
 
 ## Design principles
 
