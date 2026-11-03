@@ -70,7 +70,7 @@ public final class RpgData {
         if (!tag.contains("stat_int")) tag.putInt("stat_int", 15);
         if (!tag.contains("stat_points")) tag.putInt("stat_points", 0);
         if (!tag.contains("experience")) tag.putLong("experience", 0L);
-        if (!tag.contains("mana")) tag.putInt("mana", 50 + Math.max(0, tag.getInt("stat_int") - 15) * 3);
+        if (!tag.contains("mana")) tag.putInt("mana", maxManaForInt(tag.getInt("stat_int")));
         if (!tag.contains("job")) tag.putString("job", "beginner");
         if (!tag.contains("specialization")) tag.putString("specialization", "");
         return tag;
@@ -88,7 +88,9 @@ public final class RpgData {
         return Math.max(0, data(player).getInt("stat_" + stat.key));
     }
 
-    public static int maxMana(ServerPlayer player) { return 50 + Math.max(0, stat(player, Stat.INT) - 15) * 3; }
+    public static int maxMana(ServerPlayer player) { return maxManaForInt(stat(player, Stat.INT)); }
+
+    static int maxManaForInt(int intelligence) { return 50 + Math.max(0, intelligence - 15) * 3; }
 
     public static int mana(ServerPlayer player) { return Math.max(0, Math.min(maxMana(player), data(player).getInt("mana"))); }
 
