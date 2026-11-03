@@ -15,10 +15,7 @@ public final class RpgEvents {
 
         // Keep early-game EXP modest; elite/boss multipliers will be introduced with the loot system.
         long reward = Math.max(10L, Math.round(victim.getMaxHealth() * 2.0));
-        boolean leveledUp = RpgData.addExperience(player, reward);
-        player.sendSystemMessage(net.minecraft.network.chat.Component.literal(
-                "+" + reward + " EXP" + (leveledUp ? " — Level up! You are now level " + RpgData.level(player) + "." : "")
-        ));
+        RpgParty.distributeExperience(player, reward);
     }
 
     public static void onPlayerClone(PlayerEvent.Clone event) {

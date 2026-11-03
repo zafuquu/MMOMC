@@ -96,6 +96,21 @@ public final class RpgParty {
         return 1;
     }
 
+    public static void distributeExperience(ServerPlayer killer, long totalReward) {
+        java.util.List<ServerPlayer> eligible = killer.server.getPlayerList().getPlayers().stream()
+                .filter(member -> canSupport(killer, member))
+                .filter(member -> killer.distanceToSqr(member) <= 1024.0)
+                .toList();
+        if (eligible.isEmpty()) eligible = java.util.List.of(killer);
+        long share = Math.max(1L, totalReward / eligible.size());
+        for (ServerPlayer member : eligible) {
+            boolean leveled = RpgData.addExperience(member, share);
+            String message = "+" + share + " EXP (party share)";
+            if (leveled) message += " — Level up! You are now level " + RpgData.level(member) + ".";
+            member.sendSystemMessage(Component.literal("§a" + message));
+        }
+    }
+
     private static int count(MinecraftServer server, String partyId) {
         int n = 0;
         for (ServerPlayer p : server.getPlayerList().getPlayers()) if (id(p).equals(partyId)) n++;
