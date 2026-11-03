@@ -88,7 +88,13 @@ public final class RpgData {
         return Math.max(0, data(player).getInt("stat_" + stat.key));
     }
 
-    public static int maxMana(ServerPlayer player) { return 50 + Math.max(0, stat(player, Stat.INT) - 15) * 3; }\n\n    public static int mana(ServerPlayer player) { return Math.max(0, Math.min(maxMana(player), data(player).getInt("mana"))); }\n\n    public static void setMana(ServerPlayer player, int value) { data(player).putInt("mana", Math.max(0, Math.min(maxMana(player), value))); }\n\n    public static int availableStatPoints(ServerPlayer player) {
+    public static int maxMana(ServerPlayer player) { return 50 + Math.max(0, stat(player, Stat.INT) - 15) * 3; }
+
+    public static int mana(ServerPlayer player) { return Math.max(0, Math.min(maxMana(player), data(player).getInt("mana"))); }
+
+    public static void setMana(ServerPlayer player, int value) { data(player).putInt("mana", Math.max(0, Math.min(maxMana(player), value))); }
+
+    public static int availableStatPoints(ServerPlayer player) {
         return Math.max(0, data(player).getInt("stat_points"));
     }
 

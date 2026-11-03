@@ -30,7 +30,11 @@ public final class RpgCombat {
     public static void applyAttributes(ServerPlayer player) {
         int str = RpgData.stat(player, RpgData.Stat.STR);
         int sta = RpgData.stat(player, RpgData.Stat.STA);
-        int dex = RpgData.stat(player, RpgData.Stat.DEX);\n\n        if (player.tickCount % 20 == 0 && RpgData.mana(player) < RpgData.maxMana(player)) {\n            RpgData.setMana(player, RpgData.mana(player) + 1 + Math.max(0, RpgData.stat(player, RpgData.Stat.INT) - 15) / 20);\n        }
+        int dex = RpgData.stat(player, RpgData.Stat.DEX);
+
+        if (player.tickCount % 20 == 0 && RpgData.mana(player) < RpgData.maxMana(player)) {
+            RpgData.setMana(player, RpgData.mana(player) + 1 + Math.max(0, RpgData.stat(player, RpgData.Stat.INT) - 15) / 20);
+        }
 
         // Each point above the starting value contributes a small, readable benefit.
         double maxHealth = BASE_HEALTH + Math.max(0, sta - 15) * 0.5;

@@ -13,7 +13,12 @@ public final class RpgCommands {
 
     public static void onRegisterCommands(RegisterCommandsEvent event) {
         event.getDispatcher().register(Commands.literal("mmomc")
-                .then(Commands.literal("skill")\n                        .then(Commands.literal("list").executes(context -> RpgSkills.list(context.getSource().getPlayerOrException())))\n                        .then(Commands.literal("cast")\n                                .then(Commands.argument("skill", StringArgumentType.word())\n                                        .executes(context -> RpgSkills.cast(context.getSource().getPlayerOrException(), StringArgumentType.getString(context, "skill"))))))\n                .then(Commands.literal("profile")
+                .then(Commands.literal("skill")
+                        .then(Commands.literal("list").executes(context -> RpgSkills.list(context.getSource().getPlayerOrException())))
+                        .then(Commands.literal("cast")
+                                .then(Commands.argument("skill", StringArgumentType.word())
+                                        .executes(context -> RpgSkills.cast(context.getSource().getPlayerOrException(), StringArgumentType.getString(context, "skill"))))))
+                .then(Commands.literal("profile")
                         .executes(context -> showProfile(context.getSource().getPlayerOrException())))
                 .then(Commands.literal("allocate")
                         .then(Commands.argument("stat", StringArgumentType.word())
@@ -49,7 +54,8 @@ public final class RpgCommands {
                 + " §eSTA: §f" + RpgData.stat(player, RpgData.Stat.STA)
                 + " §eDEX: §f" + RpgData.stat(player, RpgData.Stat.DEX)
                 + " §eINT: §f" + RpgData.stat(player, RpgData.Stat.INT)));
-        player.sendSystemMessage(Component.literal("§eUnspent stat points: §f" + RpgData.availableStatPoints(player)));\n        player.sendSystemMessage(Component.literal("§bMana: §f" + RpgData.mana(player) + "/" + RpgData.maxMana(player)));
+        player.sendSystemMessage(Component.literal("§eUnspent stat points: §f" + RpgData.availableStatPoints(player)));
+        player.sendSystemMessage(Component.literal("§bMana: §f" + RpgData.mana(player) + "/" + RpgData.maxMana(player)));
         if (RpgData.level(player) < 10 && RpgData.job(player).equals("beginner")) {
             player.sendSystemMessage(Component.literal("§7Choose your first job at level 10 with /mmomc job <job>."));
         } else if (RpgData.level(player) < 50 && !RpgData.job(player).equals("beginner")) {
