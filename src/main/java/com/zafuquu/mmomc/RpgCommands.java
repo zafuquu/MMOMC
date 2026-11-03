@@ -2,6 +2,7 @@ package com.zafuquu.mmomc;
 
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
+import net.minecraft.commands.arguments.EntityArgument;
 
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
@@ -18,6 +19,13 @@ public final class RpgCommands {
                         .then(Commands.literal("cast")
                                 .then(Commands.argument("skill", StringArgumentType.word())
                                         .executes(context -> RpgSkills.cast(context.getSource().getPlayerOrException(), StringArgumentType.getString(context, "skill"))))))
+                .then(Commands.literal("party")
+                        .then(Commands.literal("create").executes(context -> RpgParty.create(context.getSource().getPlayerOrException())))
+                        .then(Commands.literal("invite").then(Commands.argument("player", EntityArgument.player())
+                                .executes(context -> RpgParty.invite(context.getSource().getPlayerOrException(), EntityArgument.getPlayer(context, "player")))))
+                        .then(Commands.literal("join").executes(context -> RpgParty.join(context.getSource().getPlayerOrException())))
+                        .then(Commands.literal("leave").executes(context -> RpgParty.leave(context.getSource().getPlayerOrException())))
+                        .then(Commands.literal("list").executes(context -> RpgParty.list(context.getSource().getPlayerOrException()))))
                 .then(Commands.literal("profile")
                         .executes(context -> showProfile(context.getSource().getPlayerOrException())))
                 .then(Commands.literal("allocate")
