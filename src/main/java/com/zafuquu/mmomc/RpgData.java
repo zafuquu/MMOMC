@@ -43,9 +43,31 @@ public final class RpgData {
     public static CompoundTag data(ServerPlayer player) {
         CompoundTag persistent = player.getPersistentData();
         if (!persistent.contains(ROOT, Tag.TAG_COMPOUND)) {
-            persistent.put(ROOT, new CompoundTag());
+            CompoundTag fresh = new CompoundTag();
+            fresh.putInt("level", 1);
+            fresh.putInt("stat_str", 15);
+            fresh.putInt("stat_sta", 15);
+            fresh.putInt("stat_dex", 15);
+            fresh.putInt("stat_int", 15);
+            fresh.putInt("stat_points", 0);
+            fresh.putLong("experience", 0L);
+            fresh.putString("job", "beginner");
+            fresh.putString("specialization", "");
+            persistent.put(ROOT, fresh);
         }
-        return persistent.getCompound(ROOT);
+
+        // Safe defaults also migrate player data created by earlier development builds.
+        CompoundTag tag = persistent.getCompound(ROOT);
+        if (!tag.contains("level")) tag.putInt("level", 1);
+        if (!tag.contains("stat_str")) tag.putInt("stat_str", 15);
+        if (!tag.contains("stat_sta")) tag.putInt("stat_sta", 15);
+        if (!tag.contains("stat_dex")) tag.putInt("stat_dex", 15);
+        if (!tag.contains("stat_int")) tag.putInt("stat_int", 15);
+        if (!tag.contains("stat_points")) tag.putInt("stat_points", 0);
+        if (!tag.contains("experience")) tag.putLong("experience", 0L);
+        if (!tag.contains("job")) tag.putString("job", "beginner");
+        if (!tag.contains("specialization")) tag.putString("specialization", "");
+        return tag;
     }
 
     public static int level(ServerPlayer player) {
