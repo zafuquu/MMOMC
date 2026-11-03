@@ -45,8 +45,8 @@ class JobTest {
     @Test
     void manaCapacityScalesFromTheBaseIntelligenceWithoutNegativeCapacity() {
         assertEquals(50, RpgFormulas.maxManaForInt(15));
-        assertEquals(80, RpgData.maxManaForInt(25));
-        assertEquals(50, RpgData.maxManaForInt(0));
+        assertEquals(80, RpgFormulas.maxManaForInt(25));
+        assertEquals(50, RpgFormulas.maxManaForInt(0));
     }
 
     @Test
