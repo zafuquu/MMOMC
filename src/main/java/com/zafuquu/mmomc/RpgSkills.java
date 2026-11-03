@@ -18,7 +18,8 @@ public final class RpgSkills {
         player.sendSystemMessage(Component.literal("§ePower Strike §7- 12 mana, 4s cooldown, STR-scaled close-range strike."));
         player.sendSystemMessage(Component.literal("§aHeal §7- 18 mana, 8s cooldown, restores health; Assist gets stronger healing."));
         player.sendSystemMessage(Component.literal("§bArcane Bolt §7- 15 mana, 3s cooldown, INT-scaled magic damage."));
-        player.sendSystemMessage(Component.literal("§7Use /mmomc skill cast <power_strike|heal|arcane_bolt>"));
+        player.sendSystemMessage(Component.literal("§dClass skills: blade_fury, iron_guard, hawkeye, elemental_surge, blessing."));
+        player.sendSystemMessage(Component.literal("§7Use /mmomc skill cast <skill_id>. Class skills require the matching first job."));
         return 1;
     }
 
@@ -28,6 +29,11 @@ public final class RpgSkills {
             case "power_strike" -> powerStrike(player);
             case "heal" -> heal(player);
             case "arcane_bolt" -> arcaneBolt(player);
+            case "blade_fury" -> classBuff(player, skill, "swordsman", 20, 200, MobEffects.STRENGTH, 1, "Blade Fury");
+            case "iron_guard" -> classBuff(player, skill, "tank", 18, 240, MobEffects.RESISTANCE, 1, "Iron Guard");
+            case "hawkeye" -> classBuff(player, skill, "archer", 16, 240, MobEffects.MOVEMENT_SPEED, 1, "Hawkeye");
+            case "elemental_surge" -> classBuff(player, skill, "magician", 24, 240, MobEffects.STRENGTH, 1, "Elemental Surge");
+            case "blessing" -> classBuff(player, skill, "assist", 22, 300, MobEffects.REGENERATION, 1, "Blessing");
             default -> {
                 player.sendSystemMessage(Component.literal("§cUnknown skill. Use /mmomc skill list."));
                 yield 0;
@@ -80,6 +86,21 @@ public final class RpgSkills {
         player.heal(amount);
         spend(player, "heal", 18, 160);
         player.sendSystemMessage(Component.literal("§aHeal restored §f" + Math.min(amount, missing) + "§a health."));
+        return 1;
+    }
+
+
+    private static int classBuff(ServerPlayer player, String skill, String requiredJob,
+            int cost, int cooldownTicks, net.minecraft.core.Holder<net.minecraft.world.effect.MobEffect> effect,
+            int amplifier, String displayName) {
+        if (!RpgData.job(player).equals(requiredJob)) {
+            player.sendSystemMessage(Component.literal("§cThis skill requires the " + RpgData.titleCase(requiredJob) + " job."));
+            return 0;
+        }
+        if (!ready(player, skill, cost, cooldownTicks)) return 0;
+        player.addEffect(new MobEffectInstance(effect, 20 * 15, amplifier));
+        spend(player, skill, cost, cooldownTicks);
+        player.sendSystemMessage(Component.literal("§d" + displayName + " activated for 15 seconds."));
         return 1;
     }
 
