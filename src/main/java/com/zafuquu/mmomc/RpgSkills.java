@@ -60,7 +60,7 @@ public final class RpgSkills {
             return 0;
         }
         int str = RpgData.stat(player, RpgData.Stat.STR);
-        float damage = (float) (5.0 + Math.max(0, str - 15) * 0.35);
+        float damage = (float) RpgSkillFormulas.powerStrikeDamage(str);
         target.hurt(player.damageSources().playerAttack(player), damage);
         spend(player, "power_strike", 12, 80);
         player.sendSystemMessage(Component.literal("§6Power Strike! §f" + damage + " damage."));
@@ -75,7 +75,7 @@ public final class RpgSkills {
             return 0;
         }
         int intelligence = RpgData.stat(player, RpgData.Stat.INT);
-        float damage = (float) (4.0 + Math.max(0, intelligence - 15) * 0.6);
+        float damage = (float) RpgSkillFormulas.arcaneBoltDamage(intelligence);
         target.hurt(player.damageSources().indirectMagic(player, player), damage);
         spend(player, "arcane_bolt", 15, 60);
         player.sendSystemMessage(Component.literal("§bArcane Bolt! §f" + damage + " magic damage."));
@@ -99,8 +99,7 @@ public final class RpgSkills {
         boolean assist = RpgData.job(player).equals("assist")
                 || RpgData.specialization(player).equals("ringmaster")
                 || RpgData.specialization(player).equals("billposter");
-        float amount = (float) (assist ? 10 + Math.max(0, RpgData.stat(player, RpgData.Stat.INT) - 15) * 0.4
-                : 6 + Math.max(0, RpgData.stat(player, RpgData.Stat.INT) - 15) * 0.2);
+        float amount = (float) RpgSkillFormulas.healAmount(RpgData.stat(player, RpgData.Stat.INT), assist);
         float missing = target.getMaxHealth() - target.getHealth();
         target.heal(amount);
         spend(player, "heal", 18, 160);
@@ -126,8 +125,11 @@ public final class RpgSkills {
         }
         double primary = requiredSpec.equals("elementor") || requiredSpec.equals("psykeeper")
                 ? RpgData.stat(player, RpgData.Stat.INT) : RpgData.stat(player, RpgData.Stat.STR);
-        float damage = (float) (6.0 + Math.max(0, primary - 15) * multiplier);
-        target.hurt(player.damageSources().playerAttack(player), damage);
+        float damage = (float) RpgSkillFormulas.specializationDamage((int) primary, 6.0, multiplier);
+        boolean magic = requiredSpec.equals("elementor") || requiredSpec.equals("psykeeper");
+        target.hurt(magic
+                ? player.damageSources().indirectMagic(player, player)
+                : player.damageSources().playerAttack(player), damage);
         spend(player, skill, cost, cooldownTicks);
         player.sendSystemMessage(Component.literal("§d" + displayName + "! §f" + damage + " damage."));
         return 1;
