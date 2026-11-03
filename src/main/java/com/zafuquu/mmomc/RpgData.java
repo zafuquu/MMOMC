@@ -52,6 +52,10 @@ public final class RpgData {
             fresh.putInt("stat_int", 15);
             fresh.putInt("stat_points", 0);
             fresh.putLong("experience", 0L);
+            fresh.putInt("mana", 50);
+            fresh.putLong("skill_cooldown_power_strike", 0L);
+            fresh.putLong("skill_cooldown_heal", 0L);
+            fresh.putLong("skill_cooldown_arcane_bolt", 0L);
             fresh.putString("job", "beginner");
             fresh.putString("specialization", "");
             persistent.put(ROOT, fresh);
@@ -66,6 +70,7 @@ public final class RpgData {
         if (!tag.contains("stat_int")) tag.putInt("stat_int", 15);
         if (!tag.contains("stat_points")) tag.putInt("stat_points", 0);
         if (!tag.contains("experience")) tag.putLong("experience", 0L);
+        if (!tag.contains("mana")) tag.putInt("mana", maxMana(player));
         if (!tag.contains("job")) tag.putString("job", "beginner");
         if (!tag.contains("specialization")) tag.putString("specialization", "");
         return tag;
@@ -83,7 +88,7 @@ public final class RpgData {
         return Math.max(0, data(player).getInt("stat_" + stat.key));
     }
 
-    public static int availableStatPoints(ServerPlayer player) {
+    public static int maxMana(ServerPlayer player) { return 50 + Math.max(0, stat(player, Stat.INT) - 15) * 3; }\n\n    public static int mana(ServerPlayer player) { return Math.max(0, Math.min(maxMana(player), data(player).getInt("mana"))); }\n\n    public static void setMana(ServerPlayer player, int value) { data(player).putInt("mana", Math.max(0, Math.min(maxMana(player), value))); }\n\n    public static int availableStatPoints(ServerPlayer player) {
         return Math.max(0, data(player).getInt("stat_points"));
     }
 
