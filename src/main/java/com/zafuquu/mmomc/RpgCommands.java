@@ -19,7 +19,7 @@ public final class RpgCommands {
                         .then(Commands.literal("cast")
                                 .then(Commands.argument("skill", StringArgumentType.word())
                                         .executes(context -> RpgSkills.cast(context.getSource().getPlayerOrException(), StringArgumentType.getString(context, "skill"))))))
-                .then(Commands.literal("equipment").requires(source -> source.hasPermission(2))
+                .then(Commands.literal("equipment")
                         .then(Commands.literal("list").executes(context -> listEquipment(context.getSource().getPlayerOrException())))
                         .then(Commands.literal("equip")
                                 .then(Commands.argument("item", StringArgumentType.word())
@@ -79,11 +79,11 @@ public final class RpgCommands {
     }
 
     private static int equipItem(ServerPlayer player, String itemId) {
-        RpgLoadout.Result result = RpgEquipmentData.equip(player, itemId.toLowerCase(java.util.Locale.ROOT));
+        RpgLoadout.Result result = RpgEquipmentData.equipFromInventory(player, itemId.toLowerCase(java.util.Locale.ROOT));
         if (result != RpgLoadout.Result.EQUIPPED) {
             player.sendSystemMessage(Component.literal(result == RpgLoadout.Result.LEVEL_TOO_LOW
                     ? "§cYour level is too low for that equipment."
-                    : "§cUnknown equipment ID. Use the starter catalog IDs."));
+                    : "§cThat equipment item is not in your inventory."));
             return 0;
         }
         RpgCombat.applyAttributes(player);
@@ -99,7 +99,7 @@ public final class RpgCommands {
             player.sendSystemMessage(Component.literal("§cUnknown slot. Use weapon, helmet, chest, legs, boots, gloves, ring, or necklace."));
             return 0;
         }
-        if (!RpgEquipmentData.unequip(player, slot)) {
+        if (!RpgEquipmentData.unequipToInventory(player, slot)) {
             player.sendSystemMessage(Component.literal("§cThat equipment slot is already empty."));
             return 0;
         }

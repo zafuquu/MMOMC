@@ -21,7 +21,7 @@
 
 ## Milestone 2 — Equipment and refinement
 - [x] Pure equipment slot, rarity, level requirement, stat aggregation, and bonus model with unit tests
-- [x] Server-authoritative starter equipment catalog (10 allowlisted definitions)\n- [x] Persistent server-side loadout with allowlisted equipment IDs and stat application\n- [x] Command-driven equipment equip/list/unequip prototype\n- [ ] Inventory-backed RPG equipment slots and rarity tiers
+- [x] Server-authoritative starter equipment catalog (10 allowlisted definitions)\n- [x] Registered physical starter equipment items (10 catalog-backed item IDs)\n- [x] Persistent server-side loadout with allowlisted equipment IDs and stat application\n- [x] Inventory-backed equip/unequip transactions; replaced items are returned or dropped\n- [ ] Item rarity presentation, custom icons/models, and inventory-backed refinement
 - [ ] Accessory stats and buffs
 - [x] Pure, unit-tested refinement chance, pity, stat bonus, and aura milestone rules
 - [ ] Refinement +1 to +20
