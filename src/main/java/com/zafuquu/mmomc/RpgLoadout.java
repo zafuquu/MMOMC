@@ -7,9 +7,8 @@ import java.util.Objects;
 
 /**
  * Immutable, runtime-independent equipment loadout rules.
- *
- * The server inventory adapter is responsible for moving ItemStacks transactionally;
- * this class decides whether a definition can occupy a slot and computes its bonuses.
+ * The server inventory adapter performs ItemStack transactions; this class validates
+ * slot occupancy and computes the resulting RPG bonuses.
  */
 public final class RpgLoadout {
     public enum Result { EQUIPPED, LEVEL_TOO_LOW, INVALID_ITEM }
@@ -19,7 +18,9 @@ public final class RpgLoadout {
     public record EquippedItem(RpgEquipment.ItemDefinition definition, int refinementLevel) {
         public EquippedItem {
             Objects.requireNonNull(definition, "definition");
-            RpgRefinement.successChance(refinementLevel, 0);
+            if (refinementLevel < 0 || refinementLevel > RpgRefinement.MAX_LEVEL) {
+                throw new IllegalArgumentException("refinementLevel must be between 0 and 20");
+            }
         }
 
         public RpgEquipment.Stats effectiveStats() {
@@ -40,7 +41,8 @@ public final class RpgLoadout {
     }
 
     public EquipResult equip(RpgEquipment.ItemDefinition item, int refinementLevel, int playerLevel) {
-        if (item == null || refinementLevel < 0 || refinementLevel > 20 || playerLevel < 1 || playerLevel > 120) {
+        if (item == null || refinementLevel < 0 || refinementLevel > RpgRefinement.MAX_LEVEL
+                || playerLevel < 1 || playerLevel > 120) {
             return new EquipResult(Result.INVALID_ITEM, this, null);
         }
         if (!item.canEquipAtLevel(playerLevel)) {
@@ -61,13 +63,8 @@ public final class RpgLoadout {
         return new RpgLoadout(next);
     }
 
-    public EquippedItem get(RpgEquipment.Slot slot) {
-        return items.get(slot);
-    }
-
-    public Map<RpgEquipment.Slot, EquippedItem> items() {
-        return items;
-    }
+    public EquippedItem get(RpgEquipment.Slot slot) { return items.get(slot); }
+    public Map<RpgEquipment.Slot, EquippedItem> items() { return items; }
 
     public RpgEquipment.Stats totalStats() {
         RpgEquipment.Stats total = new RpgEquipment.Stats(0, 0, 0, 0, 0, 0, 0, 0);
@@ -75,7 +72,5 @@ public final class RpgLoadout {
         return total;
     }
 
-    public int size() {
-        return items.size();
-    }
+    public int size() { return items.size(); }
 }
