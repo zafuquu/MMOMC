@@ -21,9 +21,7 @@ jobs:
         with:
           distribution: microsoft
           java-version: '21'
-      - name: Set up Gradle
+      - name: Set up Gradle cache
         uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: '9.2.1'
       - name: Compile and package mod
-        run: gradle --no-daemon build
+        run: bash ./gradlew --no-daemon build
