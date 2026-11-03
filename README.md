@@ -24,17 +24,21 @@ This is an early development build, **not yet a feature-complete MMORPG mod**. C
 
 ## Build
 
-Install a 64-bit Java 21 JDK. With Gradle installed, run:
+Install a 64-bit Java 21 JDK. With Java 21 installed, run the included wrapper:
 
 ```sh
-gradle build
-```
+# Windows PowerShell or Command Prompt
+gradlew.bat build
+
+# Linux/macOS
+./gradlew build
+
 
 To launch the development client or dedicated server, use:
 
 ```sh
-gradle runClient
-gradle runServer
+gradlew.bat runClient
+gradlew.bat runServer
 ```
 
 The first Gradle run downloads Minecraft and NeoForge development dependencies and may take a while. For a dedicated-server test, accept the EULA in the generated run directory before starting the server again.
