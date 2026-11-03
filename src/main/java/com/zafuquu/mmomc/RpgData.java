@@ -3,6 +3,7 @@ package com.zafuquu.mmomc;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 
 /**
  * Server-owned RPG data stored in the player's persistent entity data.
@@ -164,6 +165,13 @@ public final class RpgData {
             result.append(Character.toUpperCase(word.charAt(0))).append(word.substring(1));
         }
         return result.toString();
+    }
+
+    public static void copyProgression(Entity original, Entity replacement) {
+        CompoundTag source = original.getPersistentData();
+        if (source.contains(ROOT, Tag.TAG_COMPOUND)) {
+            replacement.getPersistentData().put(ROOT, source.getCompound(ROOT).copy());
+        }
     }
 
     public static int maxLevel() {
