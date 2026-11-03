@@ -29,10 +29,10 @@ public final class RpgSkills {
             case "power_strike" -> powerStrike(player);
             case "heal" -> heal(player);
             case "arcane_bolt" -> arcaneBolt(player);
-            case "blade_fury" -> classBuff(player, skill, "swordsman", 20, 200, MobEffects.STRENGTH, 1, "Blade Fury");
-            case "iron_guard" -> classBuff(player, skill, "tank", 18, 240, MobEffects.RESISTANCE, 1, "Iron Guard");
+            case "blade_fury" -> classBuff(player, skill, "swordsman", 20, 200, MobEffects.DAMAGE_BOOST, 1, "Blade Fury");
+            case "iron_guard" -> classBuff(player, skill, "tank", 18, 240, MobEffects.DAMAGE_RESISTANCE, 1, "Iron Guard");
             case "hawkeye" -> classBuff(player, skill, "archer", 16, 240, MobEffects.MOVEMENT_SPEED, 1, "Hawkeye");
-            case "elemental_surge" -> classBuff(player, skill, "magician", 24, 240, MobEffects.STRENGTH, 1, "Elemental Surge");
+            case "elemental_surge" -> classBuff(player, skill, "magician", 24, 240, MobEffects.DAMAGE_BOOST, 1, "Elemental Surge");
             case "blessing" -> classBuff(player, skill, "assist", 22, 300, MobEffects.REGENERATION, 1, "Blessing");
             default -> {
                 player.sendSystemMessage(Component.literal("§cUnknown skill. Use /mmomc skill list."));
