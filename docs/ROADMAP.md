@@ -6,15 +6,18 @@
 - [x] EXP rewards from hostile living entities
 - [x] First job selection at level 10
 - [x] Second-job specialization at level 50
-- [ ] CI build verified green
+- [x] CI build and JAR packaging verified
 - [ ] In-game smoke test on client and dedicated server
 
 ## Milestone 1 — RPG rules and combat
-- [ ] Apply STR/STA/DEX/INT to real gameplay attributes and derived stats
-- [ ] Health/mana model and configurable formulas
-- [ ] Job skill data model, skill points, cooldowns, and server-side validation
-- [ ] Assist healing, buffs, and resurrection
-- [ ] Death/respawn and progression edge-case tests
+- [x] Apply STR/STA/DEX to vanilla gameplay attributes
+- [x] Health/mana model and initial formulas
+- [x] Mana regeneration, skill cooldowns, and server-side skill checks
+- [x] First playable combat skills and first-job abilities
+- [x] Assist self/party healing and party Blessing
+- [x] Death/respawn progression data preservation
+- [ ] Expanded automated progression, skill, and edge-case tests
+- [ ] Balance pass in actual gameplay
 
 ## Milestone 2 — Equipment and refinement
 - [ ] RPG equipment slots and rarity tiers
@@ -31,10 +34,12 @@
 - [ ] Dungeons, boss mechanics, and encounter rewards
 
 ## Milestone 4 — Multiplayer social systems
-- [ ] Party invitations, leader, member list, chat, and role display
-- [ ] EXP distribution and party bonuses
+- [x] Party creation, leader invitations, join, leave, and member list
+- [x] Party EXP sharing for nearby online members
+- [x] Party-targeted healing and support buffs
+- [ ] Persistent offline party roster and leader succession
+- [ ] Party chat, roles, and configurable party size
 - [ ] Need/Greed and personal loot settings
-- [ ] Support targeting and party resurrection
 
 ## Milestone 5 — World and travel
 - [ ] Data-driven generated starter city and NPCs

@@ -1,56 +1,64 @@
 # MMOMC — Minecraft MMORPG
 
-MMOMC is a server-authoritative Minecraft Java RPG mod inspired by classic MMORPG progression. The long-term goal includes jobs and second-job specializations, manually allocated stats, skills and Assist support abilities, +1–+20 equipment refinement with aura milestones, boss-exclusive loot, accessories, parties, NPC hubs, warp points, teleportation, dungeons, and a map/waypoint experience.
+MMOMC is a server-authoritative Minecraft Java RPG mod inspired by classic MMORPG progression. Its target is Minecraft Java 1.21.1, NeoForge 21.1.x, and Java 21.
 
-## Development target
+## Current development features
 
-- Minecraft Java Edition **1.21.1**
-- NeoForge **21.1.x**
-- Java **21**
-- Single-player and dedicated-server support
+- Persistent level, experience, STR / STA / DEX / INT, and unspent stat points
+- Hostile-mob experience rewards and level-up progression (maximum level 120)
+- First job selection at level 10 and second-job specialization at level 50
+- Server-side stat effects, mana pool, and mana regeneration
+- Skills: Power Strike, Heal, and Arcane Bolt
+- First-job abilities: Blade Fury, Iron Guard, Hawkeye, Elemental Surge, and Blessing
+- Persistent parties with create, invite, join, leave, and list commands
+- Five-player party limit and five-minute invitations
+- Nearby party EXP sharing, party-targeted healing, and shared Blessing
 
-The project deliberately starts with a small, testable core. Gameplay state must be owned by the logical server; client screens and visual effects will be layered on after the rules are stable.
-
-## Current implementation status
-
-The first milestone establishes the Gradle/NeoForge workspace and the initial RPG core:
-- persistent character level and experience
-- STR, STA, DEX, and INT stat points
-- experience from defeating living enemies
-- player commands to inspect character state and allocate stat points
-- first-job selection at level 10 and second-job specialization at level 50 (initial defaults)
-
-This is an early development build, **not yet a feature-complete MMORPG mod**. City generation, full job skills, loot tables, parties, teleportation, minimap, custom models, and refinement visuals are planned follow-on milestones.
+This is an active development build, **not yet a feature-complete MMORPG mod**. Equipment refinement, custom equipment and materials, bosses and loot, NPC hubs, quests, teleportation, world generation, minimap, and client UI remain under development.
 
 ## Build
 
-Install a 64-bit Java 21 JDK. With Java 21 installed, run the included wrapper:
+Install a 64-bit Java 21 JDK. Run the included Gradle wrapper:
 
 ```sh
-# Windows PowerShell or Command Prompt
+# Windows
 gradlew.bat build
 
-# Linux/macOS
+# Linux / macOS
 ./gradlew build
+```
 
-
-To launch the development client or dedicated server, use:
+Launch the development client or dedicated server:
 
 ```sh
 gradlew.bat runClient
 gradlew.bat runServer
 ```
 
-The first Gradle run downloads Minecraft and NeoForge development dependencies and may take a while. For a dedicated-server test, accept the EULA in the generated run directory before starting the server again.
+The first Gradle run downloads Minecraft and NeoForge development dependencies. For a dedicated-server test, accept the EULA in the generated run directory before starting the server again.
 
-## Initial commands
+## Commands
 
-- `/mmomc profile` — display your character level, EXP, job, stats, and available stat points.
+### Character progression
+- `/mmomc profile` — show level, EXP, job, stats, stat points, and mana.
 - `/mmomc allocate <str|sta|dex|int> <points>` — spend unallocated stat points.
 - `/mmomc job <swordsman|tank|archer|magician|assist>` — choose a first job at level 10.
 - `/mmomc specialize <blade_master|berserker|paladin|guardian|ranger|sharpshooter|elementor|psykeeper|ringmaster|billposter>` — specialize at level 50.
 
-These commands are intentionally server-validated. Job advancement requirements and stat formulas will evolve as balance is tested.
+### Skills
+- `/mmomc skill list` — list available skills.
+- `/mmomc skill cast <skill_id>` — cast a skill.
+- Skill IDs: `power_strike`, `heal`, `arcane_bolt`, `blade_fury`, `iron_guard`, `hawkeye`, `elemental_surge`, `blessing`.
+- First-job abilities require the matching first job. Skill mana costs and cooldowns are validated by the server.
+
+### Parties
+- `/mmomc party create` — create a party and become its leader.
+- `/mmomc party invite <player>` — invite a player (leader only).
+- `/mmomc party join` — accept a pending invitation.
+- `/mmomc party leave` — leave the current party.
+- `/mmomc party list` — list online party members.
+
+Party membership is stored in player persistent data. Invitations expire after five minutes. EXP is shared among nearby online party members; Heal and Blessing only affect party members in range.
 
 ## Design principles
 
