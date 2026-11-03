@@ -22,9 +22,10 @@
 ## Milestone 2 — Equipment and refinement
 - [ ] RPG equipment slots and rarity tiers
 - [ ] Accessory stats and buffs
+- [x] Pure, unit-tested refinement chance, pity, stat bonus, and aura milestone rules
 - [ ] Refinement +1 to +20
 - [ ] Aura/ability milestones at +5, +10, +15, +20
-- [ ] Enhancement materials, failure rules, protection stones, and pity protection
+- [ ] In-game enhancement materials, failure transaction, protection stones, and persisted pity protection
 - [ ] Item serialization and multiplayer exploit tests
 
 ## Milestone 3 — Combat content and loot
