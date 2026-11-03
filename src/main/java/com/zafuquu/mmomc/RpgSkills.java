@@ -85,12 +85,13 @@ public final class RpgSkills {
     private static int heal(ServerPlayer player) {
         if (!ready(player, "heal", 18, 160)) return 0;
         ServerPlayer target = player.server.getPlayerList().getPlayers().stream()
-                .filter(candidate -> RpgParty.canSupport(player, candidate))
+                .filter(candidate -> candidate != player && RpgParty.canSupport(player, candidate))
                 .filter(candidate -> candidate.getHealth() < candidate.getMaxHealth() - 0.01f)
                 .filter(candidate -> player.distanceToSqr(candidate) <= 64.0)
                 .filter(player::hasLineOfSight)
                 .min(Comparator.comparingDouble(player::distanceToSqr))
                 .orElse(null);
+        if (target == null && player.getHealth() < player.getMaxHealth() - 0.01f) target = player;
         if (target == null) {
             player.sendSystemMessage(Component.literal("§eNo injured party member within 8 blocks."));
             return 0;
