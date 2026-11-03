@@ -19,6 +19,16 @@ public final class RpgCommands {
                         .then(Commands.literal("cast")
                                 .then(Commands.argument("skill", StringArgumentType.word())
                                         .executes(context -> RpgSkills.cast(context.getSource().getPlayerOrException(), StringArgumentType.getString(context, "skill"))))))
+                .then(Commands.literal("equipment")
+                        .then(Commands.literal("list").executes(context -> listEquipment(context.getSource().getPlayerOrException())))
+                        .then(Commands.literal("equip")
+                                .then(Commands.argument("item", StringArgumentType.word())
+                                        .executes(context -> equipItem(context.getSource().getPlayerOrException(),
+                                                StringArgumentType.getString(context, "item")))))
+                        .then(Commands.literal("unequip")
+                                .then(Commands.argument("slot", StringArgumentType.word())
+                                        .executes(context -> unequipItem(context.getSource().getPlayerOrException(),
+                                                StringArgumentType.getString(context, "slot"))))))
                 .then(Commands.literal("party")
                         .then(Commands.literal("create").executes(context -> RpgParty.create(context.getSource().getPlayerOrException())))
                         .then(Commands.literal("invite").then(Commands.argument("player", EntityArgument.player())
@@ -49,6 +59,53 @@ public final class RpgCommands {
                                         StringArgumentType.getString(context, "specialization")
                                 ))))
         );
+    }
+
+
+    private static int listEquipment(ServerPlayer player) {
+        RpgLoadout loadout = RpgEquipmentData.load(player);
+        player.sendSystemMessage(Component.literal("§6§lMMOMC Equipment"));
+        for (RpgEquipment.Slot slot : RpgEquipment.Slot.values()) {
+            RpgLoadout.EquippedItem item = loadout.get(slot);
+            player.sendSystemMessage(Component.literal("§e" + slot.name() + ": §f"
+                    + (item == null ? "Empty" : item.definition().id() + " +" + item.refinementLevel())));
+        }
+        RpgEquipment.Stats stats = loadout.totalStats();
+        player.sendSystemMessage(Component.literal("§bGear bonuses — STR " + stats.strength()
+                + ", STA " + stats.stamina() + ", DEX " + stats.dexterity() + ", INT "
+                + stats.intelligence() + ", ATK " + stats.attack() + ", DEF " + stats.defense()
+                + ", HP " + stats.health() + ", MP " + stats.mana()));
+        return 1;
+    }
+
+    private static int equipItem(ServerPlayer player, String itemId) {
+        RpgLoadout.Result result = RpgEquipmentData.equip(player, itemId.toLowerCase(java.util.Locale.ROOT));
+        if (result != RpgLoadout.Result.EQUIPPED) {
+            player.sendSystemMessage(Component.literal(result == RpgLoadout.Result.LEVEL_TOO_LOW
+                    ? "§cYour level is too low for that equipment."
+                    : "§cUnknown equipment ID. Use the starter catalog IDs."));
+            return 0;
+        }
+        RpgCombat.applyAttributes(player);
+        player.sendSystemMessage(Component.literal("§aEquipped " + itemId + "."));
+        return 1;
+    }
+
+    private static int unequipItem(ServerPlayer player, String rawSlot) {
+        RpgEquipment.Slot slot;
+        try {
+            slot = RpgEquipment.Slot.valueOf(rawSlot.toUpperCase(java.util.Locale.ROOT));
+        } catch (IllegalArgumentException exception) {
+            player.sendSystemMessage(Component.literal("§cUnknown slot. Use weapon, helmet, chest, legs, boots, gloves, ring, or necklace."));
+            return 0;
+        }
+        if (!RpgEquipmentData.unequip(player, slot)) {
+            player.sendSystemMessage(Component.literal("§cThat equipment slot is already empty."));
+            return 0;
+        }
+        RpgCombat.applyAttributes(player);
+        player.sendSystemMessage(Component.literal("§aUnequipped " + slot.name().toLowerCase(java.util.Locale.ROOT) + "."));
+        return 1;
     }
 
     private static int showProfile(ServerPlayer player) {

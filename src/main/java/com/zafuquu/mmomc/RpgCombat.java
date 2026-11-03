@@ -34,9 +34,10 @@ public final class RpgCombat {
     }
 
     public static void applyAttributes(ServerPlayer player) {
-        int str = RpgData.stat(player, RpgData.Stat.STR);
-        int sta = RpgData.stat(player, RpgData.Stat.STA);
-        int dex = RpgData.stat(player, RpgData.Stat.DEX);
+        RpgEquipment.Stats gear = RpgEquipmentData.load(player).totalStats();
+        int str = RpgData.stat(player, RpgData.Stat.STR) + gear.strength();
+        int sta = RpgData.stat(player, RpgData.Stat.STA) + gear.stamina();
+        int dex = RpgData.stat(player, RpgData.Stat.DEX) + gear.dexterity();
 
         if (player.tickCount % 20 == 0 && RpgData.mana(player) < RpgData.maxMana(player)) {
             RpgData.setMana(player, RpgData.mana(player)
@@ -44,14 +45,14 @@ public final class RpgCombat {
         }
 
         // Preserve the vanilla base and every unrelated modifier.
-        setBonus(player, Attributes.MAX_HEALTH, HEALTH_ID, Math.max(0, sta - 15) * 0.5);
-        setBonus(player, Attributes.ATTACK_DAMAGE, ATTACK_ID, Math.max(0, str - 15) * 0.15);
+        setBonus(player, Attributes.MAX_HEALTH, HEALTH_ID, Math.max(0, sta - 15) * 0.5 + gear.health());
+        setBonus(player, Attributes.ATTACK_DAMAGE, ATTACK_ID, Math.max(0, str - 15) * 0.15 + gear.attack());
         setBonus(player, Attributes.MOVEMENT_SPEED, SPEED_ID,
                 Math.min(100, Math.max(0, dex - 15)) * 0.0002);
         setBonus(player, Attributes.ATTACK_SPEED, ATTACK_SPEED_ID,
                 Math.min(100, Math.max(0, dex - 15)) * 0.01);
         setBonus(player, Attributes.ARMOR, ARMOR_ID,
-                Math.min(100, Math.max(0, sta - 15)) * 0.1);
+                Math.min(100, Math.max(0, sta - 15)) * 0.1 + gear.defense());
     }
 
     private static void setBonus(ServerPlayer player,
