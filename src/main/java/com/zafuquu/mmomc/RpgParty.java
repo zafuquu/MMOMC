@@ -110,6 +110,7 @@ public final class RpgParty {
     public static void distributeExperience(ServerPlayer killer, long totalReward) {
         java.util.List<ServerPlayer> eligible = killer.server.getPlayerList().getPlayers().stream()
                 .filter(member -> canSupport(killer, member))
+                .filter(member -> member.level() == killer.level())
                 .filter(member -> killer.distanceToSqr(member) <= 1024.0)
                 .toList();
         if (eligible.isEmpty()) eligible = java.util.List.of(killer);

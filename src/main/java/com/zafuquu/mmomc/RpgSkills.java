@@ -86,6 +86,7 @@ public final class RpgSkills {
         if (!ready(player, "heal", 18, 160)) return 0;
         ServerPlayer target = player.server.getPlayerList().getPlayers().stream()
                 .filter(candidate -> candidate != player && RpgParty.canSupport(player, candidate))
+                .filter(candidate -> candidate.level() == player.level())
                 .filter(candidate -> candidate.getHealth() < candidate.getMaxHealth() - 0.01f)
                 .filter(candidate -> player.distanceToSqr(candidate) <= 64.0)
                 .filter(player::hasLineOfSight)
@@ -157,7 +158,8 @@ public final class RpgSkills {
         if (!ready(player, skill, 30, 300)) return 0;
         int healed = 0;
         for (ServerPlayer ally : player.server.getPlayerList().getPlayers()) {
-            if (!RpgParty.canSupport(player, ally) || player.distanceToSqr(ally) > 256.0) continue;
+            if (!RpgParty.canSupport(player, ally) || ally.level() != player.level()
+                    || player.distanceToSqr(ally) > 256.0) continue;
             if (ally.getHealth() >= ally.getMaxHealth() - 0.01f) continue;
             ally.heal(12.0f + Math.max(0, RpgData.stat(player, RpgData.Stat.INT) - 15) * 0.4f);
             healed++;
@@ -183,7 +185,8 @@ public final class RpgSkills {
         if (skill.equals("blessing")) {
             int affected = 0;
             for (ServerPlayer ally : player.server.getPlayerList().getPlayers()) {
-                if (RpgParty.canSupport(player, ally) && player.distanceToSqr(ally) <= 256.0) {
+                if (RpgParty.canSupport(player, ally) && ally.level() == player.level()
+                        && player.distanceToSqr(ally) <= 256.0) {
                     ally.addEffect(new MobEffectInstance(effect, 20 * 15, amplifier));
                     affected++;
                 }
