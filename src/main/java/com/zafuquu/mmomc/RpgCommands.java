@@ -19,7 +19,7 @@ public final class RpgCommands {
                         .then(Commands.literal("cast")
                                 .then(Commands.argument("skill", StringArgumentType.word())
                                         .executes(context -> RpgSkills.cast(context.getSource().getPlayerOrException(), StringArgumentType.getString(context, "skill"))))))
-                .then(Commands.literal("equipment")
+                .then(Commands.literal("equipment").requires(source -> source.hasPermission(2))
                         .then(Commands.literal("list").executes(context -> listEquipment(context.getSource().getPlayerOrException())))
                         .then(Commands.literal("equip")
                                 .then(Commands.argument("item", StringArgumentType.word())
