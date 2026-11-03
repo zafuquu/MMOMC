@@ -24,6 +24,6 @@ public final class RpgEvents {
     public static void onPlayerClone(PlayerEvent.Clone event) {
         // NeoForge persistent entity data is not automatically copied when a player respawns after death.
         if (!event.isWasDeath()) return;
-        event.getEntity().getPersistentData().merge(event.getOriginal().getPersistentData().copy());
+        RpgData.copyProgression(event.getOriginal(), event.getEntity());
     }
 }
