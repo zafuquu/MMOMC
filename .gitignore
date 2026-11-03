@@ -1,0 +1,30 @@
+# Gradle
+.gradle/
+build/
+!**/src/**/build/
+
+# IDEs
+.idea/
+*.iml
+*.ipr
+*.iws
+.classpath
+.project
+.settings/
+.vscode/
+out/
+
+# Minecraft development runs
+run/
+runs/
+!**/src/**/run/
+
+# Generated data caches
+src/generated/**/.cache/
+
+# Local publishing output
+repo/
+
+# OS
+.DS_Store
+Thumbs.db
