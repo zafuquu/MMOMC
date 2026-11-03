@@ -47,9 +47,9 @@ class JobTest {
         assertEquals(50, RpgFormulas.maxManaForInt(15));
         assertEquals(80, RpgFormulas.maxManaForInt(25));
         assertEquals(50, RpgFormulas.maxManaForInt(0));
-        assertEquals(150, RpgFormulas.experienceToNextLevel(1));
-        assertEquals(300, RpgFormulas.experienceToNextLevel(2));
-        assertEquals(2100, RpgFormulas.experienceToNextLevel(10));
+        assertEquals(155, RpgFormulas.experienceToNextLevel(1));
+        assertEquals(220, RpgFormulas.experienceToNextLevel(2));
+        assertEquals(1100, RpgFormulas.experienceToNextLevel(10));
         assertThrows(IllegalArgumentException.class, () -> RpgFormulas.experienceToNextLevel(0));
     }
 
