@@ -57,8 +57,8 @@ public final class RpgEquipment {
         public ItemDefinition {
             if (id == null || !id.matches("[a-z0-9_]+")) throw new IllegalArgumentException("Invalid item id");
             if (slot == null || rarity == null || baseStats == null) throw new IllegalArgumentException("Missing item metadata");
-            if (requiredLevel < 1 || requiredLevel > RpgData.maxLevel()) {
-                throw new IllegalArgumentException("requiredLevel must be between 1 and " + RpgData.maxLevel());
+            if (requiredLevel < 1 || requiredLevel > 120) {
+                throw new IllegalArgumentException("requiredLevel must be between 1 and 120");
             }
         }
 
