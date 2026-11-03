@@ -27,6 +27,38 @@ public final class RpgRefinement {
         return Math.min(100, base + consecutiveFailures * 5);
     }
 
+    /**
+     * Resolves one refinement attempt from a caller-supplied roll in [0, 99].
+     * Failure never destroys or downgrades equipment; it increments pity only.
+     * The caller owns random-number generation and material consumption.
+     */
+    public static AttemptResult resolveAttempt(int currentLevel, int consecutiveFailures, int roll) {
+        validateLevel(currentLevel);
+        if (consecutiveFailures < 0) throw new IllegalArgumentException("consecutiveFailures cannot be negative");
+        if (roll < 0 || roll > 99) throw new IllegalArgumentException("roll must be between 0 and 99");
+        if (!canRefine(currentLevel)) throw new IllegalArgumentException("Equipment is already at maximum refinement");
+
+        int targetLevel = currentLevel + 1;
+        int chance = successChancePercent(targetLevel, consecutiveFailures);
+        boolean success = roll < chance;
+        return new AttemptResult(success ? targetLevel : currentLevel,
+                success ? 0 : Math.min(PITY_FAILURE_LIMIT, consecutiveFailures + 1),
+                chance, success);
+    }
+
+    public record AttemptResult(int refinementLevel, int consecutiveFailures,
+                                int successChancePercent, boolean success) {
+        public AttemptResult {
+            validateLevel(refinementLevel);
+            if (consecutiveFailures < 0 || consecutiveFailures > PITY_FAILURE_LIMIT) {
+                throw new IllegalArgumentException("consecutiveFailures out of range");
+            }
+            if (successChancePercent < 0 || successChancePercent > 100) {
+                throw new IllegalArgumentException("successChancePercent out of range");
+            }
+        }
+    }
+
     /** Aura tier is granted at +5, +10, +15, and +20. */
     public static int auraTier(int refinementLevel) {
         validateLevel(refinementLevel);

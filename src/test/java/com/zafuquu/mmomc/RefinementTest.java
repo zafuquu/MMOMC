@@ -46,6 +46,33 @@ class RefinementTest {
     }
 
     @Test
+    void attemptSuccessAdvancesLevelAndResetsPity() {
+        var result = RpgRefinement.resolveAttempt(4, 3, 0);
+        assertTrue(result.success());
+        assertEquals(5, result.refinementLevel());
+        assertEquals(0, result.consecutiveFailures());
+        assertEquals(105 - 15, result.successChancePercent());
+    }
+
+    @Test
+    void failedAttemptPreservesItemLevelAndBuildsPity() {
+        var result = RpgRefinement.resolveAttempt(19, 2, 99);
+        assertFalse(result.success());
+        assertEquals(19, result.refinementLevel());
+        assertEquals(3, result.consecutiveFailures());
+        assertEquals(20, result.successChancePercent());
+    }
+
+    @Test
+    void pityGuaranteesSuccessAndMaximumLevelCannotBeRefined() {
+        var guaranteed = RpgRefinement.resolveAttempt(19, 10, 99);
+        assertTrue(guaranteed.success());
+        assertEquals(20, guaranteed.refinementLevel());
+        assertEquals(0, guaranteed.consecutiveFailures());
+        assertThrows(IllegalArgumentException.class, () -> RpgRefinement.resolveAttempt(20, 0, 0));
+    }
+
+    @Test
     void rejectsOutOfRangeInputs() {
         assertThrows(IllegalArgumentException.class, () -> RpgRefinement.successChancePercent(0, 0));
         assertThrows(IllegalArgumentException.class, () -> RpgRefinement.successChancePercent(21, 0));
